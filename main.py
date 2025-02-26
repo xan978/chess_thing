@@ -1,6 +1,10 @@
 from board import Board
 from pieces import Piece
 
-test = Board()
-test.print_board()
+game = Board()
+game.print_board()
+
+piece = Piece(color="balls", pos="idk")
+piece.symbol()
+
 
