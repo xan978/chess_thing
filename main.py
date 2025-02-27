@@ -2,22 +2,38 @@ from board import Board
 import os
 # from logic import Piece
 
-os.system("clear")
+def clear():
+   os.system("cls" if os.name == "nt" else "clear")
+
 game = Board()
-game.print_board()
 
-# def clear():
-#    os.system("cls" if os.name == "nt" else "clear")
+while True:
+    clear()
+    game.print_board()
+    mode = int(input("| add piece: 1 | move piece: 2 | delete piece: 3 |\n"))
 
-pos = []
-x = input("put in x: ")
-y = input("put in y: ")
-pos.append(int(x))
-pos.append(int(y))
+    if mode == 1:
+        clear()
+        game.print_board()
+        pos = []
+        user_input_piece = int(input("enter piece number: \n"))
+        user_input_pos = int(input("enter xy cordinate: "))
 
-os.system("clear")
-game.add_piece(icon="*", type=10, pos=pos, color=1)
-game.print_board()
+    elif mode == 2:
+        pass
+
+    elif mode == 3:
+        pass
+
+    else:
+        print("bye!")
+        break
+
+
+
+
+
+# game.add_piece(icon="*", type=10, pos=pos, color=1)
 
 
 
