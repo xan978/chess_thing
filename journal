@@ -1,1 +1,3 @@
-2/11/25 made board class and main.   in main class i added a grid for the pieces
+2/11/25 - 2/11/28 made logic file, added ability to add and remove pieces, made a interactive menu to interact with the
+                  chess board, added different pieces that can go on the board.
+2/11/25 made board class and main, in main class i added a grid for the pieces
