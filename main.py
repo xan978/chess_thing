@@ -17,7 +17,7 @@ def cord_input():
 while True:
     clear()
     game.print_board()
-    mode = int(input("| add piece: 1 | move piece: 2 | delete piece: 3 | quit: 4 |\n"))
+    mode = int(input("| add piece: 1 | move piece: 2 | delete piece: 3 | clear board: 4 | setup board: 5 |\n"))
 
     if mode == 1:
         clear()
@@ -36,6 +36,12 @@ while True:
         pos = cord_input()
         game.remove_piece(pos)
 
+    elif mode == 4:
+        game.clear_grid()
+
+    elif mode == 5:
+        game.board_setup()
+
     else:
         print("bye!")
         break
@@ -44,7 +50,7 @@ while True:
 
 
 
-# game.add_piece(icon="*", type=10, pos=pos, color=1)
+
 
 
 
