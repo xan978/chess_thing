@@ -9,5 +9,4 @@ class Piece:
         return False
 
 class Pawn(Piece):
-
-
+    pass

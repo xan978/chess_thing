@@ -1,3 +1,4 @@
+import os
 class Board:
     def __init__(self):
         self.grid = []
@@ -9,6 +10,9 @@ class Board:
                 row.append(data)
             self.grid.append(row)
 
+    def clear(self):
+        os.system("cls" if os.name == "nt" else "clear")
+
     def clear_grid(self):
         self.grid = []
         for i in range(8):
@@ -18,7 +22,9 @@ class Board:
                 row.append(data)
             self.grid.append(row)
 
-    def print_board(self):
+    def print_board(self, clear=True):
+        if clear != False:
+            self.clear()
         for i in range(8):
             print(8-i, end="")
             for x in range(8):
@@ -37,6 +43,13 @@ class Board:
 
     def remove_piece(self, pos):
         self.add_piece(type=0, pos=pos, color=0)
+
+    def move_piece(self, start_pos, end_pos):
+        start_pos = self.pos_conversion(start_pos)
+        type = self.grid[start_pos[1]][start_pos[0]][1]
+        color = self.grid[start_pos[1]][start_pos[0]][2]
+        self.add_piece(type=type, pos=end_pos, color=color)
+
 
     def pos_conversion(self, pos):
         new_pos = []
