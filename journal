@@ -1,3 +1,5 @@
+3/3/25 - 3/7/25   made it so that the game displayes the chess board differently depending if you are currently playing
+                  as white or black, added a check so that you cant move a empty sqaure onto another piece.
 2/24/25 - 2/28/25 made logic file, added ability to add and remove pieces, made a interactive menu to interact with the
                   chess board, added different pieces that can go on the board.
 2/11/25 made board class and main, in main class i added a grid for the pieces

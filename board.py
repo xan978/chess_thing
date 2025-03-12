@@ -6,7 +6,8 @@ class Board:
         for i in range(8):
             row = []
             for j in range(8):
-                data = [" ", 0, 0]
+                # order of data: icon, type, color, moves
+                data = [" ", 0, 0, 0]
                 row.append(data)
             self.grid.append(row)
 
@@ -18,21 +19,29 @@ class Board:
         for i in range(8):
             row = []
             for j in range(8):
-                data = [" ", 0, 0]
+                data = [" ", 0, 0, 0]
                 row.append(data)
             self.grid.append(row)
 
-    def print_board(self, clear=True):
+    def print_board(self, clear=True, color=1):
         if clear != False:
             self.clear()
-        for i in range(8):
-            print(8-i, end="")
-            for x in range(8):
-                print(f"[{self.grid[i][x][0]}] ", end="")
-            print()
-        print(f"  1   2   3   4   5   6   7   8 \n")
+        if color == 1:
+            for i in range(8):
+                print(8-i, end="")
+                for x in range(8):
+                    print(f"[{self.grid[i][x][0]}] ", end="")
+                print()
+            print(f"  1   2   3   4   5   6   7   8 \n")
+        else:
+            for i in range(8):
+                print(i+1, end="")
+                for x in range(8):
+                    print(f"[{self.grid[7-i][7-x][0]}] ", end="")
+                print()
+            print(f"  8   7   6   5   4   3   2   1 \n")
 
-    def add_piece(self, type, pos, color):
+    def add_piece(self, type, pos, color, moves=0):
         pos = self.pos_conversion(pos)
         x = pos[0]
         y = pos[1]
@@ -40,16 +49,29 @@ class Board:
         self.grid[y][x][0] = icon
         self.grid[y][x][1] = type
         self.grid[y][x][2] = color
+        self.grid[y][x][3] = moves
 
     def remove_piece(self, pos):
         self.add_piece(type=0, pos=pos, color=0)
 
-    def move_piece(self, start_pos, end_pos):
-        start_pos = self.pos_conversion(start_pos)
-        type = self.grid[start_pos[1]][start_pos[0]][1]
-        color = self.grid[start_pos[1]][start_pos[0]][2]
-        self.add_piece(type=type, pos=end_pos, color=color)
+    def move_piece(self, start_pos, end_pos, current_color):
+        start_pos2 = self.pos_conversion(start_pos)
+        type = self.grid[start_pos2[1]][start_pos2[0]][1]
+        color = self.grid[start_pos2[1]][start_pos2[0]][2]
+        moves = self.grid[start_pos2[1]][start_pos2[0]][3] + 1
+        if type != 0:
+            self.add_piece(type=type, pos=end_pos, color=color, moves=moves)
+            self.remove_piece(pos=start_pos)
 
+    def get_piece_data(self, pos):
+        pos = self.pos_conversion(pos)
+        x = pos[0]
+        y = pos[1]
+        icon = self.grid[y][x][0]
+        type = self.grid[y][x][1]
+        color = self.grid[y][x][2]
+        moves = self.grid[y][x][3]
+        return [icon, type, color, moves]
 
     def pos_conversion(self, pos):
         new_pos = []
