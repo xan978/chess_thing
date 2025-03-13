@@ -59,9 +59,12 @@ class Board:
         type = self.grid[start_pos2[1]][start_pos2[0]][1]
         color = self.grid[start_pos2[1]][start_pos2[0]][2]
         moves = self.grid[start_pos2[1]][start_pos2[0]][3] + 1
-        if type != 0:
-            self.add_piece(type=type, pos=end_pos, color=color, moves=moves)
-            self.remove_piece(pos=start_pos)
+        if type == 0:
+            return 1  # cant move empty sqaure
+        if current_color != color:
+            return 2  # wrong color
+        self.add_piece(type=type, pos=end_pos, color=color, moves=moves)
+        self.remove_piece(pos=start_pos)
 
     def get_piece_data(self, pos):
         pos = self.pos_conversion(pos)

@@ -25,12 +25,12 @@ def move_piece_loop(current_color):
     end = cord_input("select square in x,y format: ")   
     is_valid_move = game.move_piece(start_pos=start, end_pos=end, current_color=current_color)
     if is_valid_move == 1:
-        game.print_board()
+        game.print_board(color=current_color)
         print(f"move number = {move_number} \nSelected square is empty, please select new one")
         move_piece_loop(current_color=current_color)
     elif is_valid_move == 2:
-        game.print_board()
-        print(f"move number = {move_number} | color = {current_color} \nIllegal move, :(")
+        game.print_board(color=current_color)
+        print(f"move number = {move_number} | color = {current_color} \nwrong color")
         move_piece_loop(current_color=current_color)
 
 clear()
@@ -73,7 +73,7 @@ while mode == 2:
     elif test_mode == 5:
         pos = cord_input(string="select square in x,y format: ")
         piece_data = game.get_piece_data(pos=pos)
-        print(piece_data)
+        print(f"icon = {piece_data[0]}, piece number = {piece_data[1]}, piece color = {piece_data[2]}, piece moves = {piece_data[3]}")
         input("press enter to continue")
 
     elif test_mode == 6:
