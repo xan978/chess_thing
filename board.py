@@ -1,4 +1,5 @@
 import os
+from logic import Piece
 class Board:
     def __init__(self):
         self.grid = []
@@ -55,14 +56,29 @@ class Board:
         self.add_piece(type=0, pos=pos, color=0)
 
     def move_piece(self, start_pos, end_pos, current_color):
+
         start_pos2 = self.pos_conversion(start_pos)
+        end_pos2 = self.pos_conversion(end_pos)
         type = self.grid[start_pos2[1]][start_pos2[0]][1]
         color = self.grid[start_pos2[1]][start_pos2[0]][2]
         moves = self.grid[start_pos2[1]][start_pos2[0]][3] + 1
+
         if type == 0:
             return 1  # cant move empty sqaure
         if current_color != color:
             return 2  # wrong color
+        logic = Piece(self.grid)
+        move_functions = {
+            1: logic.move_pawn,
+            2: logic.move_rook,
+            3: logic.move_knight,
+            4: logic.move_bishop,
+            5: logic.move_queen,
+            6: logic.move_king
+        }
+        if type in move_functions and not move_functions[type](start_pos2, end_pos2):
+            return 3
+
         self.add_piece(type=type, pos=end_pos, color=color, moves=moves)
         self.remove_piece(pos=start_pos)
 

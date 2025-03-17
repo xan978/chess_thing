@@ -32,6 +32,10 @@ def move_piece_loop(current_color):
         game.print_board(color=current_color)
         print(f"move number = {move_number} | color = {current_color} \nwrong color")
         move_piece_loop(current_color=current_color)
+    elif is_valid_move == 3:
+        game.print_board(color=current_color)
+        print(f"move number = {move_number} | color = {current_color} \nillegal move")
+        move_piece_loop(current_color=current_color)
 
 clear()
 mode = mode = int(input("| start game: 1 | test functions: 2 |\n"))
