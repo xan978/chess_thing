@@ -76,7 +76,7 @@ class Board:
             5: logic.move_queen,
             6: logic.move_king
         }
-        if type in move_functions and not move_functions[type](start_pos2, end_pos2):
+        if type in move_functions and not move_functions[type](start_pos, end_pos, start_pos2, end_pos2):
             return 3
 
         self.add_piece(type=type, pos=end_pos, color=color, moves=moves)
