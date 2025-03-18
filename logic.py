@@ -49,8 +49,19 @@ class Piece:
             return True
 
     def move_rook(self, start, end, start2, end2):
-        return True
+        start_x, start_y = start
+        end_x, end_y = end
 
+        if start_x == end_x:
+            direction = 1 if end_y > start_y else -1
+            length = abs(start_y - end_y)
+            for i in range(length):
+                if(
+                    direction == 1
+                    and self.grid[start2[1] + (i+1)][start2[0]][1] != 0
+                    and start_y + (i+1) != end_y
+                )
+                    return False
     def move_knight(self, start, end, start2, end2):
         return True
 

@@ -1,3 +1,4 @@
+3/18/25  added pawn logic, now you have to make a legal move to move the pawn
 3/10/25 - 3/14/25 added logic so that you can't move the other player's piece. add more to move_piece function so
                   that it checks if its a legal move by using the piece class
 3/3/25 - 3/7/25   made it so that the game displayes the chess board differently depending if you are currently playing
