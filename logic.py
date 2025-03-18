@@ -11,6 +11,14 @@ class Piece:
         else:
             return False
 
+    def friendly_fire(self, start2, end2):
+        start_color = self.grid[start2[1]][start2[0]][2]
+        end_color = self.grid[end2[1]][end2[0]][2]
+        if start_color == end_color:
+            return True
+        else:
+            return False
+
     def move_pawn(self, start, end, start2, end2):
         start_x, start_y = start
         end_x, end_y = end
@@ -51,17 +59,52 @@ class Piece:
     def move_rook(self, start, end, start2, end2):
         start_x, start_y = start
         end_x, end_y = end
+        one_direction = 0
+
+        if self.friendly_fire(start2, end2) == True:
+            return False
 
         if start_x == end_x:
             direction = 1 if end_y > start_y else -1
             length = abs(start_y - end_y)
-            for i in range(length):
+            one_direction += 1
+            for y in range(length):
                 if(
                     direction == 1
-                    and self.grid[start2[1] + (i+1)][start2[0]][1] != 0
-                    and start_y + (i+1) != end_y
-                )
+                    and self.grid[start2[1] - (y+1)][start2[0]][1] != 0
+                    and start_y + (y+1) != end_y
+                ):
                     return False
+                if (
+                    direction == -1
+                    and self.grid[start2[1] + (y + 1)][start2[0]][1] != 0
+                    and start_y - (y + 1) != end_y
+                ):
+                    return False
+
+        if start_y == end_y:
+            direction = 1 if end_x > start_x else -1
+            length = abs(start_x - end_x)
+            one_direction += 1
+            for x in range(length):
+                if(
+                    direction ==  1
+                    and self.grid[start2[1]][start2[0] + (x+1)][2] != 0
+                    and start_x + (x+1) != end_x
+                ):
+                    return False
+                if (
+                    direction == -1
+                    and self.grid[start2[1]][start2[0] - (x + 1)][2] != 0
+                    and start_x - (x + 1) != end_x
+                ):
+                    return False
+
+        if one_direction != 1:
+            return False
+        else:
+            return True
+
     def move_knight(self, start, end, start2, end2):
         return True
 
