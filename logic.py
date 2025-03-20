@@ -19,6 +19,15 @@ class Piece:
         else:
             return False
 
+    def promotion_check(self, end_y, color):
+        if (
+            (color == 1 and end_y == 8)
+            or (color == 2 and end_y == 1)
+        ):
+            return "promotion"
+        else:
+            return True
+
     def move_pawn(self, start, end, start2, end2):
         start_x, start_y = start
         end_x, end_y = end
@@ -26,35 +35,31 @@ class Piece:
         end_type = self.grid[end2[1]][end2[0]][1]
         start_moves = self.grid[start2[1]][start2[0]][3]
 
-        if color == 1:
-            direction = 1
-        else:
-            direction = -1
+        direction = 1 if color == 1 else -1
         if start_x == end_x and end_y == start_y + direction and end_type == 0:
-            return True
+            return self.promotion_check(end_y, color)
 
         if (
             start_x == end_x
             and end_y == start_y + (direction * 2)
             and end_type == 0
             and start_moves == 0
+            and self.grid[start2[1] - direction][start2[0]][1] == 0
         ):
             return True
 
         if (
-            self.is_enemy(start2, end2) == True
+            (self.is_enemy(start2, end2) == True
             and end_x == start_x + 1
-            and end_y == start_y + direction
+            and end_y == start_y + direction)
 
-        ):
-            return True
-
-        if (
-            self.is_enemy(start2, end2) == True
+            or (self.is_enemy(start2, end2) == True
             and end_x == start_x - 1
-            and end_y == start_y + direction
+            and end_y == start_y + direction)
         ):
-            return True
+            return self.promotion_check(end_y, color)
+
+        return False
 
     def move_rook(self, start, end, start2, end2):
         start_x, start_y = start

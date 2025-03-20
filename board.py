@@ -76,11 +76,22 @@ class Board:
             5: logic.move_queen,
             6: logic.move_king
         }
-        if type in move_functions and not move_functions[type](start_pos, end_pos, start_pos2, end_pos2):
+        check = move_functions[type](start_pos, end_pos, start_pos2, end_pos2)
+        if check == False:
             return 3
+        elif check == "promotion":
+            self.promotion(end_pos, color, moves)
+            self.remove_piece(pos=start_pos)
+            return 10
+        elif check == "pass":
+            pass
 
         self.add_piece(type=type, pos=end_pos, color=color, moves=moves)
         self.remove_piece(pos=start_pos)
+
+    def promotion(self, pos, color, moves):
+        piece = int(input("Enter promotion piece number: "))
+        self.add_piece(type=piece, pos=pos, color=color, moves=moves)
 
     def get_piece_data(self, pos):
         pos = self.pos_conversion(pos)
