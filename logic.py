@@ -111,7 +111,25 @@ class Piece:
             return True
 
     def move_knight(self, start, end, start2, end2):
-        return True
+        start_x, start_y = start
+        end_x, end_y = end
+
+        if self.friendly_fire(start2, end2) == True:
+            return False
+
+        if (
+            (start_y + 2 == end_y or start_y - 2 == end_y)
+             and (start_x + 1 == end_x or start_x - 1 == end_x)
+        ):
+            return True
+
+        if (
+            (start_x + 2 == end_x or start_x - 2 == end_x)
+            and (start_y + 1 == end_y or start_y - 1 == end_y)
+        ):
+            return True
+
+        return False
 
     def move_bishop(self, start, end, start2, end2):
         return True
