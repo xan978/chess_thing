@@ -20,34 +20,38 @@ def get_current_color(move_number):
     else:
         return 1
 
-def move_piece_loop(current_color):
-    start = cord_input("select piece in x,y format: ")
-    end = cord_input("select square in x,y format: ")   
+def move_check(current_color, start, end):
     is_valid_move = game.move_piece(start_pos=start, end_pos=end, current_color=current_color)
     if is_valid_move == 1:
-        game.print_board(color=current_color)
-        print(f"move number = {move_number} \nSelected square is empty, please select new one")
-        move_piece_loop(current_color=current_color)
+        return "Selected square is empty, please select new one"
     elif is_valid_move == 2:
-        game.print_board(color=current_color)
-        print(f"move number = {move_number} | color = {current_color} \nwrong color")
-        move_piece_loop(current_color=current_color)
+        return "wrong color"
     elif is_valid_move == 3:
-        game.print_board(color=current_color)
-        print(f"move number = {move_number} | color = {current_color} \nillegal move")
-        move_piece_loop(current_color=current_color)
+        return "can't move onto self"
+    elif is_valid_move == 4:
+        return "illegal move"
+    return True
 
 clear()
-mode = mode = int(input("| start game: 1 | test functions: 2 |\n"))
+mode = int(input("| start game: 1 | test functions: 2 |\n"))
 move_number = 1
 current_color = 1
+error_message = False
 
 while mode == 1:
+
     current_color = get_current_color(move_number)
     game.print_board(color=current_color)
+    if error_message != False: print(f"error: {move_check_data}")
     print(f"move number = {move_number} | current color = {current_color}")
-    move_piece_loop(current_color=current_color)
-    move_number += 1
+
+    start = cord_input("select piece in x,y format: ")
+    end = cord_input("select square in x,y format: ")
+    move_check_data = move_check(current_color, start, end)
+    if move_check_data == True:
+        move_number += 1; error_message = False
+    else:
+        error_message = move_check_data
 
 
 while mode == 2:

@@ -67,6 +67,8 @@ class Board:
             return 1  # cant move empty sqaure
         if current_color != color:
             return 2  # wrong color
+        if start_pos == end_pos:
+            return 3  # cant move onto self
         logic = Piece(self.grid)
         move_functions = {
             1: logic.move_pawn,
@@ -78,11 +80,11 @@ class Board:
         }
         check = move_functions[type](start_pos, end_pos, start_pos2, end_pos2)
         if check == False:
-            return 3
+            return 4  # illegal move
         elif check == "promotion":
             self.promotion(end_pos, color, moves)
             self.remove_piece(pos=start_pos)
-            return 10
+            return 10  # promotion!!!!
         elif check == "pass":
             pass
 

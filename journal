@@ -1,3 +1,4 @@
+3/25/26           added error messages and changed up main to be more clean
 3/25/25           completed knight logic
 3/20/25           added pawn promotion
 3/18/25 - 3/20/25 added pawn logic, now you have to make a legal move to move the pawn, same with the rook
