@@ -22,15 +22,14 @@ def get_current_color(move_number):
 
 def move_check(current_color, start, end):
     is_valid_move = game.move_piece(start_pos=start, end_pos=end, current_color=current_color)
-    if is_valid_move == 1:
-        return "Selected square is empty, please select new one"
-    elif is_valid_move == 2:
-        return "wrong color"
-    elif is_valid_move == 3:
-        return "can't move onto self"
-    elif is_valid_move == 4:
-        return "illegal move"
-    return True
+    messages = {
+        1: "Selected square is empty, please select new one",
+        2: "wrong color",
+        3: "can't move onto self",
+        4: "illegal move"
+    }
+    return messages.get(is_valid_move, True)
+
 
 clear()
 mode = int(input("| start game: 1 | test functions: 2 |\n"))

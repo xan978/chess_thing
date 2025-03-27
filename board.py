@@ -55,13 +55,11 @@ class Board:
     def remove_piece(self, pos):
         self.add_piece(type=0, pos=pos, color=0)
 
-    def move_piece(self, start_pos, end_pos, current_color):
+    def move_check(self, start_pos, end_pos, current_color):
 
+        icon, type, color, moves = self.get_piece_data(start_pos)
         start_pos2 = self.pos_conversion(start_pos)
         end_pos2 = self.pos_conversion(end_pos)
-        type = self.grid[start_pos2[1]][start_pos2[0]][1]
-        color = self.grid[start_pos2[1]][start_pos2[0]][2]
-        moves = self.grid[start_pos2[1]][start_pos2[0]][3] + 1
 
         if type == 0:
             return 1  # cant move empty sqaure
@@ -69,6 +67,7 @@ class Board:
             return 2  # wrong color
         if start_pos == end_pos:
             return 3  # cant move onto self
+
         logic = Piece(self.grid)
         move_functions = {
             1: logic.move_pawn,
@@ -81,15 +80,27 @@ class Board:
         check = move_functions[type](start_pos, end_pos, start_pos2, end_pos2)
         if check == False:
             return 4  # illegal move
+        elif check == "check":
+            return 5
         elif check == "promotion":
+            return 6  # promotion!!!!
+        elif check == "castle":
+            return 7
+
+        return True
+
+    def move_piece(self, start_pos, end_pos, current_color):
+        icon, type, color, moves = self.get_piece_data(start_pos)
+        moves += 1
+        returned_number = self.move_check(start_pos, end_pos, current_color)
+        if returned_number == True:
+            self.add_piece(type=type, pos=end_pos, color=color, moves=moves)
+            self.remove_piece(pos=start_pos)
+        elif returned_number == 6:
             self.promotion(end_pos, color, moves)
             self.remove_piece(pos=start_pos)
-            return 10  # promotion!!!!
-        elif check == "pass":
-            pass
-
-        self.add_piece(type=type, pos=end_pos, color=color, moves=moves)
-        self.remove_piece(pos=start_pos)
+        else:
+            return returned_number
 
     def promotion(self, pos, color, moves):
         piece = int(input("Enter promotion piece number: "))

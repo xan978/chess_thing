@@ -1,4 +1,5 @@
-3/25/26           added error messages and changed up main to be more clean
+3/27/25           broke up move_piece method into two different methods. made board class better
+3/26/25           added error messages and changed up main to be more clean
 3/25/25           completed knight logic
 3/20/25           added pawn promotion
 3/18/25 - 3/20/25 added pawn logic, now you have to make a legal move to move the pawn, same with the rook
@@ -8,4 +9,4 @@
                   as white or black, added a check so that you cant move a empty sqaure onto another piece.
 2/24/25 - 2/28/25 made logic file, added ability to add and remove pieces, made a interactive menu to interact with the
                   chess board, added different pieces that can go on the board.
-2/11/25 made board class and main, in main class i added a grid for the pieces
+2/11/25           made board class and main, in main class i added a grid for the pieces
