@@ -56,11 +56,19 @@ while mode == 1:
 while mode == 2:
     game.print_board(color=current_color)
     print(f"current color = {current_color}")
+    if error_message != False: print(f"error: {move_check_data}")
     s = "| move piece: 1 | delete piece: 2 | add piece: 3 | change color: 4 | get info: 5| setup board: 6 | clear board: 7 |\n"
     test_mode = int(input(s))
 
     if test_mode == 1:
-        move_piece_loop(current_color)
+        start = cord_input("select piece in x,y format: ")
+        end = cord_input("select square in x,y format: ")
+        move_check_data = move_check(current_color, start, end)
+        if move_check_data == True:
+            move_number += 1;
+            error_message = False
+        else:
+            error_message = move_check_data
 
     elif test_mode == 2:
         pos = cord_input(string="enter x,y to delete piece: ")

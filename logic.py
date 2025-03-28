@@ -134,12 +134,16 @@ class Piece:
     def move_bishop(self, start, end, start2, end2):
         start_x, start_y = start
         end_x, end_y = end
-        if (abs(start_x) - abs(end_x)) != (abs(start_y) - abs(end_y)):
+        if abs(start_x - end_x) != abs(start_y - end_y):
             return False
         if self.friendly_fire(start2, end2):
             return False
 
-        # direction_x = 1 if
+        direction_x = 1 if end_x > start_y else -1
+        direction_y = 1 if end_y > start_y else -1
+        length = abs(start_x - end_x)
+        for i in range(length):
+            pass
 
         return True
 
