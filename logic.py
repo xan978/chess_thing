@@ -28,6 +28,12 @@ class Piece:
         else:
             return True
 
+    def pos_conversion(self, x=0, y=0):
+        if x != 0:
+            return x-1
+        else:
+            return 8-y
+
     def move_pawn(self, start, end, start2, end2):
         start_x, start_y = start
         end_x, end_y = end
@@ -94,13 +100,13 @@ class Piece:
             for x in range(length):
                 if(
                     direction ==  1
-                    and self.grid[start2[1]][start2[0] + (x+1)][2] != 0
+                    and self.grid[start2[1]][start2[0] + (x+1)][1] != 0
                     and start_x + (x+1) != end_x
                 ):
                     return False
                 if (
                     direction == -1
-                    and self.grid[start2[1]][start2[0] - (x + 1)][2] != 0
+                    and self.grid[start2[1]][start2[0] - (x + 1)][1] != 0
                     and start_x - (x + 1) != end_x
                 ):
                     return False
@@ -139,16 +145,20 @@ class Piece:
         if self.friendly_fire(start2, end2):
             return False
 
-        direction_x = 1 if end_x > start_y else -1
+        direction_x = 1 if end_x > start_x else -1
         direction_y = 1 if end_y > start_y else -1
-        length = abs(start_x - end_x)
-        for i in range(length):
-            pass
+        x, y = start_x + direction_x, start_y + direction_y
+        while (x, y) != (end_x, end_y):
+            x2, y2 = self.pos_conversion(x=x), self.pos_conversion(y=y)
+            if self.grid[y2][x2][1] != 0:
+                return False
+            x += direction_x
+            y += direction_y
 
         return True
 
     def move_queen(self, start, end, start2, end2):
-        return True
+        return self.move_rook(start, end, start2, end2) or self.move_bishop(start, end, start2, end2)
 
     def move_king(self, start, end, start2, end2):
         return True
