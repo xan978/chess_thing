@@ -161,5 +161,12 @@ class Piece:
         return self.move_rook(start, end, start2, end2) or self.move_bishop(start, end, start2, end2)
 
     def move_king(self, start, end, start2, end2):
-        return True
+        start_x, start_y = start
+        end_x, end_y = end
+        abs_x = abs(start_x - end_x)
+        abs_y = abs(start_y - end_y)
+        if self.friendly_fire(start2, end2) == True: return False
+        if (abs_x > 1) or (abs_y > 1):
+            return False
 
+        return True

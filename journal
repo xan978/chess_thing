@@ -1,3 +1,4 @@
+3/30/25  king piece now cant move farther than 1 square at a time
 3/28/25  finished bishop logic and queen logic.
 3/27/25  broke up move_piece method into two different methods. made board class better
 3/26/25  added error messages and changed up main to be more clean
