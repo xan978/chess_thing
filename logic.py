@@ -163,6 +163,28 @@ class Piece:
     def move_king(self, start, end, start2, end2):
         start_x, start_y = start
         end_x, end_y = end
+
+        if (
+            self.grid[end2[1]][end2[0]][1] == 2      # landing on rook
+            and self.grid[end2[1]][end2[0]][3] == 0  # rook has not moved
+            and self.grid[start2[1]][start2[0]][3] == 0 # the king piece has not moved
+            and (end_x == 1 or end_x == 8) # can only be the corners of the board
+        ):
+            if end_y == 1:
+                if end_x == 1:
+                    # need to add check for pieces in the way
+                    return "castleLW"
+                else:
+                    # need to add check for pieces in the way
+                    return "castleRW"
+            elif end_y == 8:
+                if end_x == 1:
+                    # need to add check for pieces in the way
+                    return "castleLB"
+                else:
+                    # need to add check for pieces in the way
+                    return "castleRB"
+
         abs_x = abs(start_x - end_x)
         abs_y = abs(start_y - end_y)
         if self.friendly_fire(start2, end2) == True: return False

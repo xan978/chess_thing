@@ -84,8 +84,14 @@ class Board:
             return 5
         elif check == "promotion":
             return 6  # promotion!!!!
-        elif check == "castle":
-            return 7
+        elif check == "castleLW":
+            return 71 # castle left white
+        elif check == "castleRW":
+            return 72 # castle right white
+        elif check == "castleLB":
+            return 73 # castle left black
+        elif check == "castleRB":
+            return 74 # castle right black
 
         return True
 
@@ -93,12 +99,15 @@ class Board:
         icon, type, color, moves = self.get_piece_data(start_pos)
         moves += 1
         returned_number = self.move_check(start_pos, end_pos, current_color)
+
         if returned_number == True:
             self.add_piece(type=type, pos=end_pos, color=color, moves=moves)
             self.remove_piece(pos=start_pos)
         elif returned_number == 6:
             self.promotion(end_pos, color, moves)
             self.remove_piece(pos=start_pos)
+        elif returned_number > 70:
+            pass
         else:
             return returned_number
 
