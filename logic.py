@@ -171,18 +171,32 @@ class Piece:
             and (end_x == 1 or end_x == 8) # can only be the corners of the board
         ):
             if end_y == 1:
-                if end_x == 1:
-                    # need to add check for pieces in the way
+                # white castle
+                if(
+                    end_x == 1
+                    and self.grid[7][1][1] == 0
+                    and self.grid[7][2][1] == 0
+                    and self.grid[7][3][1] == 0
+                ):
                     return "castleLW"
-                else:
-                    # need to add check for pieces in the way
+                elif(
+                    self.grid[7][5][1] == 0
+                    and self.grid[7][6][1] == 0
+                ):
                     return "castleRW"
             elif end_y == 8:
-                if end_x == 1:
-                    # need to add check for pieces in the way
+                # black castle
+                if(
+                    end_x == 1
+                    and self.grid[0][1][1] == 0
+                    and self.grid[0][2][1] == 0
+                    and self.grid[0][3][1] == 0
+                ):
                     return "castleLB"
-                else:
-                    # need to add check for pieces in the way
+                elif(
+                     self.grid[0][5][1] == 0
+                     and self.grid[0][6][1] == 0
+                ):
                     return "castleRB"
 
         abs_x = abs(start_x - end_x)
