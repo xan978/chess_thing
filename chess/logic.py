@@ -34,6 +34,33 @@ class Piece:
         else:
             return 8-y
 
+    def is_piece_attacked(self, pos, pos2, color):
+        functions = {
+            1:self.move_pawn,
+            2:self.move_rook,
+            3:self.move_knight,
+            4:self.move_bishop,
+            5:self.move_queen,
+            6:self.move_king_simple,
+        }
+        for y in range(8):
+            for x in range(8):
+                start = [x, y]
+                start2 = [self.pos_conversion(x = x), self.pos_conversion(y = y)]
+                piece_number = self.grid[y][x][1]
+
+                if start != pos and piece_number != 0:
+                    #self.grid[y][x][2] = # opisite of color
+                    move_check = functions[piece_number](start, pos, start2, pos2)
+                    # return sqaure color
+                else:
+                    move_check = True
+
+                if move_check != True or move_check == "promotion":
+                    return False
+
+                return True
+
     def move_pawn(self, start, end, start2, end2):
         start_x, start_y = start
         end_x, end_y = end
@@ -160,9 +187,22 @@ class Piece:
     def move_queen(self, start, end, start2, end2):
         return self.move_rook(start, end, start2, end2) or self.move_bishop(start, end, start2, end2)
 
+    def move_king_simple(self, start, end, start2, end2):
+        start_x, start_y = start
+        end_x, end_y = end
+
+        abs_x = abs(start_x - end_x)
+        abs_y = abs(start_y - end_y)
+        if self.friendly_fire(start2, end2) == True: return False
+        if (abs_x > 1) or (abs_y > 1):
+            return False
+
+        return True
+
     def move_king(self, start, end, start2, end2):
         start_x, start_y = start
         end_x, end_y = end
+        color = self.grid[start2[1]][start2[0]][2]
 
         if (
             self.grid[end2[1]][end2[0]][1] == 2      # landing on rook
@@ -200,10 +240,10 @@ class Piece:
                 ):
                     return "castleRB"
 
-        abs_x = abs(start_x - end_x)
-        abs_y = abs(start_y - end_y)
-        if self.friendly_fire(start2, end2) == True: return False
-        if (abs_x > 1) or (abs_y > 1):
+        if not self.move_king_simple(start, end, start2, end2):
+            return False
+
+        if not self.is_piece_attacked(end, end2, color):
             return False
 
         return True
