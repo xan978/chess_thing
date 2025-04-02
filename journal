@@ -1,3 +1,5 @@
+3/31/25 - 4/2/25  king piece now cant move into check, added new function in logic class that can detect if a square
+                  is being attacked
 3/30/25  king piece now cant move farther than 1 square at a time
 3/28/25  finished bishop logic and queen logic.
 3/27/25  broke up move_piece method into two different methods. made board class better

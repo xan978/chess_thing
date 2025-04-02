@@ -26,7 +26,8 @@ def move_check(current_color, start, end):
         1: "Selected square is empty, please select new one",
         2: "wrong color",
         3: "can't move onto self",
-        4: "illegal move"
+        4: "illegal move",
+        8: "cant move king into check"
     }
     return messages.get(is_valid_move, True)
 

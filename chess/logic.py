@@ -34,7 +34,7 @@ class Piece:
         else:
             return 8-y
 
-    def is_piece_attacked(self, pos, pos2, color):
+    def is_square_attacked(self, pos, pos2, color):
         functions = {
             1:self.move_pawn,
             2:self.move_rook,
@@ -45,21 +45,19 @@ class Piece:
         }
         for y in range(8):
             for x in range(8):
-                start = [x, y]
-                start2 = [self.pos_conversion(x = x), self.pos_conversion(y = y)]
+                start2 = [x, y]
+                start = [x+1, 8-y]
                 piece_number = self.grid[y][x][1]
-
-                if start != pos and piece_number != 0:
-                    #self.grid[y][x][2] = # opisite of color
+                piece_color = self.grid[y][x][2]
+                if start != pos and piece_number != 0 and piece_color != color:
                     move_check = functions[piece_number](start, pos, start2, pos2)
-                    # return sqaure color
                 else:
-                    move_check = True
+                    move_check = False
 
-                if move_check != True or move_check == "promotion":
-                    return False
+                if move_check == True or move_check == "promotion":
+                    return True
 
-                return True
+        return False
 
     def move_pawn(self, start, end, start2, end2):
         start_x, start_y = start
@@ -243,7 +241,7 @@ class Piece:
         if not self.move_king_simple(start, end, start2, end2):
             return False
 
-        if not self.is_piece_attacked(end, end2, color):
+        if self.is_square_attacked(end, end2, color):
             return False
 
         return True

@@ -92,6 +92,8 @@ class Board:
             return 73 # castle left black
         elif check == "castleRB":
             return 74 # castle right black
+        elif check == "check_square":
+            return 8  # cant move king into check
 
         return True
 
