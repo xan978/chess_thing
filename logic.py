@@ -172,6 +172,7 @@ class Piece:
         ):
             if end_y == 1:
                 # white castle
+                # IMPORTANT: add check so that no sqaures the king go through are threatend
                 if(
                     end_x == 1
                     and self.grid[7][1][1] == 0
