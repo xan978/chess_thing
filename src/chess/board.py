@@ -165,10 +165,3 @@ class Board:
             (7, 2): "*"
         }
         return data_sheet.get((type, color), "?")
-
-
-
-
-
-
-
