@@ -59,6 +59,17 @@ class Piece:
 
         return False
 
+    def is_list_attacked(self, cords, color):
+        # if any square in the list is being attacked, return true
+        # list is to be formated like so: [cord, cord2], [cord, cord2]
+        # the 2 after the second item in each list means the unconverted number
+        for cord in cords:
+            if (
+                self.is_square_attacked(cord[0], cord[1], color)
+            ):
+                return True
+        return False
+
     def move_pawn(self, start, end, start2, end2):
         start_x, start_y = start
         end_x, end_y = end
@@ -201,6 +212,8 @@ class Piece:
         start_x, start_y = start
         end_x, end_y = end
         color = self.grid[start2[1]][start2[0]][2]
+        lw_list = [[2,1],[7,1]], [[3,1],[7,2], [4,1],[7,3]]
+        rw_list = [[6,1],[7,5]], [[7,1],[7,6]]
 
         if (
             self.grid[end2[1]][end2[0]][1] == 2      # landing on rook
@@ -210,19 +223,22 @@ class Piece:
         ):
             if end_y == 1:
                 # white castle
-                # IMPORTANT: add check so that no sqaures the king go through are threatend
+                # IMPORTANT: add check so that no squares the king go through are threatend
                 if(
-                    end_x == 1
-                    and self.grid[7][1][1] == 0
+                    end_x == 1 # left rook
+                    and self.grid[7][1][1] == 0 # going through empty squares
                     and self.grid[7][2][1] == 0
                     and self.grid[7][3][1] == 0
                 ):
-                    return "castleLW"
+                    if not self.is_list_attacked(lw_list, color=1):
+                        # makes sure not to pass through any squares under attack
+                        return "castleLW"
                 elif(
                     self.grid[7][5][1] == 0
                     and self.grid[7][6][1] == 0
                 ):
-                    return "castleRW"
+                    if not self.is_list_attacked(rw_list, color=1):
+                        return "castleRW"
             elif end_y == 8:
                 # black castle
                 if(
