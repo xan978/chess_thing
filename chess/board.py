@@ -61,12 +61,12 @@ class Board:
         start_pos2 = self.pos_conversion(start_pos)
         end_pos2 = self.pos_conversion(end_pos)
 
-        if type == 0:
-            return 1  # cant move empty sqaure
-        if current_color != color:
-            return 2  # wrong color
-        if start_pos == end_pos:
-            return 3  # cant move onto self
+        if (
+            type == 0  # cant move empty square
+            or current_color != color  # wrong color
+            or start_pos == end_pos  # cant move onto self
+        ):
+            return 1
 
         logic = Piece(self.grid)
         move_functions = {
@@ -79,45 +79,62 @@ class Board:
         }
         check = move_functions[type](start_pos, end_pos, start_pos2, end_pos2)
         if check == False:
-            return 4  # illegal move
-        elif check == "check":
-            return 5
+            return 1  # illegal move
         elif check == "promotion":
-            return 6  # promotion!!!!
+            return 2  # promotion!!!!
         elif check == "castleLW":
-            return 71 # castle left white
+            return 31 # castle left white
         elif check == "castleRW":
-            return 72 # castle right white
+            return 32 # castle right white
         elif check == "castleLB":
-            return 73 # castle left black
+            return 33 # castle left black
         elif check == "castleRB":
-            return 74 # castle right black
-        elif check == "check_square":
-            return 8  # cant move king into check
+            return 34 # castle right black
 
-        return True
+        return 0  # legal move
 
     def move_piece(self, start_pos, end_pos, current_color):
         icon, type, color, moves = self.get_piece_data(start_pos)
         moves += 1
         returned_number = self.move_check(start_pos, end_pos, current_color)
 
-        if returned_number == True:
+        if returned_number == 0: # legal move
             self.add_piece(type=type, pos=end_pos, color=color, moves=moves)
             self.remove_piece(pos=start_pos)
-        elif returned_number == 6:
+        elif returned_number == 1:  # illegal move
+            return 1
+        elif returned_number == 2:  # promotion
             self.promotion(end_pos, color, moves)
             self.remove_piece(pos=start_pos)
-        elif returned_number > 70:
-            pass
-        else:
-            return returned_number
+        elif returned_number > 30:  # castling
+            self.castle(returned_number)
 
     def promotion(self, pos, color, moves):
         piece = int(input("Enter promotion piece number: "))
         self.add_piece(type=piece, pos=pos, color=color, moves=moves)
 
-    def get_piece_data(self, pos):
+    def castle(self, castle_number):
+        pass
+        # coordinites are wrong
+        # if castle_number == 31:  # left white
+        #     self.move_piece_simple(start_pos=[1, 1], end_pos=[1, 4])  # moves rook
+        #     self.move_piece_simple(start_pos=[1, 5], end_pos=[1, 3])  # moves king
+        # elif castle_number == 32:  # right white
+        #     self.move_piece_simple(start_pos=[1, 8], end_pos=[1, 6])  # moves rook
+        #     self.move_piece_simple(start_pos=[1, 5], end_pos=[1, 7])  # moves king
+        # elif castle_number == 33: # left black
+        #     self.move_piece_simple(start_pos=[8, 1], end_pos=[8, 4])  # moves rook
+        #     self.move_piece_simple(start_pos=[8, 5], end_pos=[8, 3])  # moves king
+        # elif castle_number == 34: # right black
+        #     self.move_piece_simple(start_pos=[8, 8], end_pos=[8, 6])  # moves rook
+        #     self.move_piece_simple(start_pos=[8, 5], end_pos=[8, 7])  # moves king
+
+    def move_piece_simple(self, start_pos, end_pos):  # takes in unconverted numbers
+        icon, type, color, moves = self.get_piece_data(start_pos)
+        self.add_piece(type, end_pos, color, moves=moves)
+        self.remove_piece(start_pos)
+
+    def get_piece_data(self, pos):  # takes in unconverted number
         pos = self.pos_conversion(pos)
         x = pos[0]
         y = pos[1]

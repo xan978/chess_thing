@@ -212,8 +212,10 @@ class Piece:
         start_x, start_y = start
         end_x, end_y = end
         color = self.grid[start2[1]][start2[0]][2]
-        lw_list = [[2,1],[7,1]], [[3,1],[7,2], [4,1],[7,3]]
-        rw_list = [[6,1],[7,5]], [[7,1],[7,6]]
+        lw_list = [ [[2,1],[7,1]], [[3,1],[7,2]], [[4,1],[7,3]] ]
+        rw_list = [ [[6,1],[7,5]], [[7,1],[7,6]] ]
+        lb_list = [ [[2,8],[0,1]], [[3,8],[0,2]], [[4,8],[0,3]] ]
+        rb_list = [ [[6,8],[0,5]], [[7,8],[0,6]] ]
 
         if (
             self.grid[end2[1]][end2[0]][1] == 2      # landing on rook
@@ -242,17 +244,19 @@ class Piece:
             elif end_y == 8:
                 # black castle
                 if(
-                    end_x == 1
+                    end_x == 1 # left rook
                     and self.grid[0][1][1] == 0
                     and self.grid[0][2][1] == 0
                     and self.grid[0][3][1] == 0
                 ):
-                    return "castleLB"
+                    if not self.is_list_attacked(lb_list, color=2):
+                        return "castleLB"
                 elif(
                      self.grid[0][5][1] == 0
                      and self.grid[0][6][1] == 0
                 ):
-                    return "castleRB"
+                    if not self.is_list_attacked(rb_list, color=2):
+                        return "castleRB"
 
         if not self.move_king_simple(start, end, start2, end2):
             return False

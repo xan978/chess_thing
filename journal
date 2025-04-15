@@ -1,3 +1,6 @@
+4/15/25  created castle method in board class, and completed all of the code for castling
+4/14/25  created a chess board that displays on the screen. still lacking pieces though
+4/7/25 - 4/10/25  created display class and learned more about pygame
 3/31/25 - 4/2/25  king piece now cant move into check, added new function in logic class that can detect if a square
                   is being attacked
 3/30/25  king piece now cant move farther than 1 square at a time
