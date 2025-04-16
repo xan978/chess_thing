@@ -159,6 +159,9 @@ class Board:
             self.add_piece(type=piece_row[i], pos=[i+1, 1], color=1)
             self.add_piece(type=piece_row[i], pos=[i+1, 8], color=2)
 
+    def set_board(self, board):
+        self.grid = board
+
     def get_icon(self, type, color):
         # 1=pawn 2=rook 3=knight 4=bishop 5=queen 6=king 7=test_piece
         # 1=white 2=black

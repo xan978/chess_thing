@@ -1,6 +1,9 @@
 from board import Board
 # from display import Display
 import os
+import copy
+
+demo1 = [[['r', 2, 2, 0], ['n', 3, 2, 0], ['b', 4, 2, 0], ['q', 5, 2, 0], ['k', 6, 2, 0], ['b', 4, 2, 0], ['n', 3, 2, 0], ['r', 2, 2, 0]], [['p', 1, 2, 0], ['p', 1, 2, 0], ['p', 1, 2, 0], ['p', 1, 2, 0], ['p', 1, 2, 0], ['p', 1, 2, 0], ['p', 1, 2, 0], ['p', 1, 2, 0]], [[' ', 0, 0, 0], [' ', 0, 0, 0], [' ', 0, 0, 0], [' ', 0, 0, 0], [' ', 0, 0, 0], [' ', 0, 0, 0], [' ', 0, 0, 0], [' ', 0, 0, 0]], [[' ', 0, 0, 0], [' ', 0, 0, 0], [' ', 0, 0, 0], [' ', 0, 0, 0], [' ', 0, 0, 0], [' ', 0, 0, 0], [' ', 0, 0, 0], [' ', 0, 0, 0]], [[' ', 0, 0, 0], [' ', 0, 0, 0], ['r', 2, 2, 0], [' ', 0, 0, 0], [' ', 0, 0, 0], [' ', 0, 0, 0], [' ', 0, 0, 0], [' ', 0, 0, 0]], [[' ', 0, 0, 0], [' ', 0, 0, 0], [' ', 0, 0, 0], [' ', 0, 0, 0], [' ', 0, 0, 0], [' ', 0, 0, 0], [' ', 0, 0, 0], [' ', 0, 0, 0]], [['P', 1, 1, 0], ['P', 1, 1, 0], [' ', 0, 0, 0], ['P', 1, 1, 0], ['P', 1, 1, 0], ['P', 1, 1, 0], ['P', 1, 1, 0], ['P', 1, 1, 0]], [['R', 2, 1, 0], [' ', 0, 0, 0], [' ', 0, 0, 0], [' ', 0, 0, 0], ['K', 6, 1, 0], [' ', 0, 0, 0], [' ', 0, 0, 0], ['R', 2, 1, 0]]]
 
 # display = Display()
 # display.display_loop()
@@ -56,7 +59,7 @@ while mode == 2:
     game.print_board(color=current_color)
     print(f"current color = {current_color}")
     if error_message != False: print(f"error: {move_check_data}")
-    s = "| move piece: 1 | delete piece: 2 | add piece: 3 | change color: 4 | get info: 5| setup board: 6 | clear board: 7 |\n"
+    s = "| move piece: 1 | delete piece: 2 | add piece: 3 | change color: 4 | get info: 5| setup board: 6 | clear board: 7 | print gird: 8 | board: 9\n"
     test_mode = int(input(s))
 
     if test_mode == 1:
@@ -64,7 +67,7 @@ while mode == 2:
         end = cord_input("select square in x,y format: ")
         move_check_data = move_check(current_color, start, end)
         if move_check_data == True:
-            move_number += 1;
+            move_number += 1
             error_message = False
         else:
             error_message = move_check_data
@@ -95,6 +98,18 @@ while mode == 2:
 
     elif test_mode == 7:
         game.clear_grid()
+
+    elif test_mode == 8:
+        print(game.grid)
+        input("press enter to continue")
+
+    elif test_mode == 9:
+        clear()
+        game.print_board()
+        print("| 1: castle | 2: rook | 3: check | 4: checkmate")
+        board_state = int(input("enter which board state to pick: "))
+        if board_state == 1:
+            game.grid = copy.deepcopy(demo1)
 
     else:
         print("Bye!")
