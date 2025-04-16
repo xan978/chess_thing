@@ -114,20 +114,18 @@ class Board:
         self.add_piece(type=piece, pos=pos, color=color, moves=moves)
 
     def castle(self, castle_number):
-        pass
-        # coordinites are wrong
-        # if castle_number == 31:  # left white
-        #     self.move_piece_simple(start_pos=[1, 1], end_pos=[1, 4])  # moves rook
-        #     self.move_piece_simple(start_pos=[1, 5], end_pos=[1, 3])  # moves king
-        # elif castle_number == 32:  # right white
-        #     self.move_piece_simple(start_pos=[1, 8], end_pos=[1, 6])  # moves rook
-        #     self.move_piece_simple(start_pos=[1, 5], end_pos=[1, 7])  # moves king
-        # elif castle_number == 33: # left black
-        #     self.move_piece_simple(start_pos=[8, 1], end_pos=[8, 4])  # moves rook
-        #     self.move_piece_simple(start_pos=[8, 5], end_pos=[8, 3])  # moves king
-        # elif castle_number == 34: # right black
-        #     self.move_piece_simple(start_pos=[8, 8], end_pos=[8, 6])  # moves rook
-        #     self.move_piece_simple(start_pos=[8, 5], end_pos=[8, 7])  # moves king
+        if castle_number == 31:  # left white
+            self.move_piece_simple(start_pos=[1, 1], end_pos=[4, 1])  # moves rook
+            self.move_piece_simple(start_pos=[5, 1], end_pos=[3, 1])  # moves king
+        elif castle_number == 32:  # right white
+            self.move_piece_simple(start_pos=[8, 1], end_pos=[6, 1])  # moves rook
+            self.move_piece_simple(start_pos=[5, 1], end_pos=[7, 1])  # moves king
+        elif castle_number == 33: # left black
+            self.move_piece_simple(start_pos=[1, 8], end_pos=[4, 8])  # moves rook
+            self.move_piece_simple(start_pos=[5, 8], end_pos=[3, 8])  # moves king
+        elif castle_number == 34: # right black
+            self.move_piece_simple(start_pos=[8, 8], end_pos=[6, 8])  # moves rook
+            self.move_piece_simple(start_pos=[5, 8], end_pos=[7, 8])  # moves king
 
     def move_piece_simple(self, start_pos, end_pos):  # takes in unconverted numbers
         icon, type, color, moves = self.get_piece_data(start_pos)
