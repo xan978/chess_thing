@@ -1,3 +1,5 @@
+4/16/25 - 4/17/25  now you must move out of check or move a piece to block the check. also combined
+                   move_piece and one other method together for simplicity
 4/15/25  created castle method in board class, and completed all of the code for castling
 4/14/25  created a chess board that displays on the screen. still lacking pieces though
 4/7/25 - 4/10/25  created display class and learned more about pygame
