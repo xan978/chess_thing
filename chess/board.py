@@ -3,6 +3,7 @@ from logic import Piece
 class Board:
     def __init__(self):
         self.grid = []
+        self.clear_term = True
 
         for i in range(8):
             row = []
@@ -13,7 +14,10 @@ class Board:
             self.grid.append(row)
 
     def clear(self):
-        os.system("cls" if os.name == "nt" else "clear")
+        if self.clear_term == True:
+            os.system("cls" if os.name == "nt" else "clear")
+        else:
+            pass
 
     def clear_grid(self):
         self.grid = []
@@ -55,11 +59,25 @@ class Board:
     def remove_piece(self, pos):
         self.add_piece(type=0, pos=pos, color=0)
 
+    def king_pos(self, color):
+        for y in range(8):
+            for x in range(8):
+                if self.grid[y][x][1] == 6 and self.grid[y][x][2] == color:
+                    return [x+1, 8-y]
+
+
+    def is_checkmate(self, color):
+        # check if a king is in checkmate
+        king_pos = self.king_pos(color)
+        logic = Piece(self.grid)
+
+
     def move_check(self, start_pos, end_pos, current_color):
 
         icon, type, color, moves = self.get_piece_data(start_pos)
         start_pos2 = self.pos_conversion(start_pos)
         end_pos2 = self.pos_conversion(end_pos)
+        # print(f"TEST DATA: {self.king_pos(current_color)}")
 
         if (
             type == 0  # cant move empty square
