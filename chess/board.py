@@ -1,4 +1,4 @@
-import os
+import os, copy
 from logic import Piece
 class Board:
     def __init__(self):
@@ -97,23 +97,41 @@ class Board:
             6: logic.move_king
         }
         check = move_functions[type](start_pos, end_pos, start_pos2, end_pos2)
-
-        king_pos = self.king_pos(current_color)
-
         if check == False:
             return 1  # illegal move
-        elif check == "promotion":
+
+        king_pos = self.king_pos(current_color)
+        backup_grid = copy.deepcopy(self.grid)
+
+        if check == "promotion":
             self.promotion(end_pos, color, moves)
             self.remove_piece(pos=start_pos)
-            return 0
-            # promotion!!!!
         elif check > 30:
             self.castle(check)
-            return 0
+        else:
+            self.add_piece(type=type, pos=end_pos, color=color, moves=moves)
+            self.remove_piece(pos=start_pos)
 
-        self.add_piece(type=type, pos=end_pos, color=color, moves=moves)
-        self.remove_piece(pos=start_pos)
-        return 0  # legal move
+        king_pos = self.king_pos(current_color)
+        king_pos2 = self.pos_conversion(king_pos)
+        if logic.is_square_attacked(king_pos, king_pos2, current_color):
+            self.grid = backup_grid
+            return 3  # must move out of check
+
+        return 0
+
+        # if check == "promotion":
+        #     self.promotion(end_pos, color, moves)
+        #     self.remove_piece(pos=start_pos)
+        #     return 0
+        #     # promotion!!!!
+        # elif check > 30:
+        #     self.castle(check)
+        #     return 0
+        #
+        # self.add_piece(type=type, pos=end_pos, color=color, moves=moves)
+        # self.remove_piece(pos=start_pos)
+        # return 0  # legal move
 
     def promotion(self, pos, color, moves):
         piece = int(input("Enter promotion piece number: "))
