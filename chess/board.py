@@ -72,11 +72,12 @@ class Board:
         logic = Piece(self.grid)
 
 
-    def move_check(self, start_pos, end_pos, current_color):
+    def move_piece(self, start_pos, end_pos, current_color):
 
         icon, type, color, moves = self.get_piece_data(start_pos)
         start_pos2 = self.pos_conversion(start_pos)
         end_pos2 = self.pos_conversion(end_pos)
+        moves += 1
         # print(f"TEST DATA: {self.king_pos(current_color)}")
 
         if (
@@ -96,36 +97,23 @@ class Board:
             6: logic.move_king
         }
         check = move_functions[type](start_pos, end_pos, start_pos2, end_pos2)
+
+        king_pos = self.king_pos(current_color)
+
         if check == False:
             return 1  # illegal move
         elif check == "promotion":
-            return 2  # promotion!!!!
-        elif check == "castleLW":
-            return 31 # castle left white
-        elif check == "castleRW":
-            return 32 # castle right white
-        elif check == "castleLB":
-            return 33 # castle left black
-        elif check == "castleRB":
-            return 34 # castle right black
-
-        return 0  # legal move
-
-    def move_piece(self, start_pos, end_pos, current_color):
-        icon, type, color, moves = self.get_piece_data(start_pos)
-        moves += 1
-        returned_number = self.move_check(start_pos, end_pos, current_color)
-
-        if returned_number == 0: # legal move
-            self.add_piece(type=type, pos=end_pos, color=color, moves=moves)
-            self.remove_piece(pos=start_pos)
-        elif returned_number == 1:  # illegal move
-            return 1
-        elif returned_number == 2:  # promotion
             self.promotion(end_pos, color, moves)
             self.remove_piece(pos=start_pos)
-        elif returned_number > 30:  # castling
-            self.castle(returned_number)
+            return 0
+            # promotion!!!!
+        elif check > 30:
+            self.castle(check)
+            return 0
+
+        self.add_piece(type=type, pos=end_pos, color=color, moves=moves)
+        self.remove_piece(pos=start_pos)
+        return 0  # legal move
 
     def promotion(self, pos, color, moves):
         piece = int(input("Enter promotion piece number: "))
@@ -179,6 +167,13 @@ class Board:
 
     def set_board(self, board):
         self.grid = board
+
+    def opposite_color(self, color):
+        if color == 1:
+            return 2
+        else:
+            return 1
+
 
     def get_icon(self, type, color):
         # 1=pawn 2=rook 3=knight 4=bishop 5=queen 6=king 7=test_piece

@@ -234,13 +234,13 @@ class Piece:
                 ):
                     if not self.is_list_attacked(lw_list, color=1):
                         # makes sure not to pass through any squares under attack
-                        return "castleLW"
+                        return 31
                 elif(
                     self.grid[7][5][1] == 0
                     and self.grid[7][6][1] == 0
                 ):
                     if not self.is_list_attacked(rw_list, color=1):
-                        return "castleRW"
+                        return 32
             elif end_y == 8:
                 # black castle
                 if(
@@ -250,13 +250,13 @@ class Piece:
                     and self.grid[0][3][1] == 0
                 ):
                     if not self.is_list_attacked(lb_list, color=2):
-                        return "castleLB"
+                        return 33
                 elif(
                      self.grid[0][5][1] == 0
                      and self.grid[0][6][1] == 0
                 ):
                     if not self.is_list_attacked(rb_list, color=2):
-                        return "castleRB"
+                        return 34
 
         if not self.move_king_simple(start, end, start2, end2):
             return False
