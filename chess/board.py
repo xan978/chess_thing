@@ -66,10 +66,21 @@ class Board:
                     return [x+1, 8-y]
 
 
-    def is_checkmate(self, color):
-        # check if a king is in checkmate
-        king_pos = self.king_pos(color)
+    def is_checkmate(self, king_pos, king_pos2, color): # check if king is in checkmate
         logic = Piece(self.grid)
+        enemy_color = self.opposite_color(color)
+        if not logic.is_square_attacked(king_pos, king_pos2, color):
+            return False
+        # insert check if king can just move out of the way
+
+        for y in range(8):
+            for x in range(8):
+                piece_icon, piece_type, piece_color, piece_moves = self.get_piece_data(king_pos)
+                if piece_color != color or piece_type == 6 or piece_type == 0:
+                    continue
+                for y2 in range(8):
+                    for x2 in range(8):
+                        pass
 
 
     def move_piece(self, start_pos, end_pos, current_color):
@@ -85,7 +96,7 @@ class Board:
             or current_color != color  # wrong color
             or start_pos == end_pos  # cant move onto self
         ):
-            return 1
+            return 1  # illegal move
 
         logic = Piece(self.grid)
         move_functions = {
@@ -100,38 +111,29 @@ class Board:
         if check == False:
             return 1  # illegal move
 
-        king_pos = self.king_pos(current_color)
-        backup_grid = copy.deepcopy(self.grid)
-
         if check == "promotion":
             self.promotion(end_pos, color, moves)
             self.remove_piece(pos=start_pos)
         elif check > 30:
             self.castle(check)
-        else:
+        else:  # complete move
             self.add_piece(type=type, pos=end_pos, color=color, moves=moves)
             self.remove_piece(pos=start_pos)
 
+        other_color = self.opposite_color(current_color)
+        backup_grid = copy.deepcopy(self.grid)
         king_pos = self.king_pos(current_color)
         king_pos2 = self.pos_conversion(king_pos)
+        enemy_king_pos = self.king_pos(other_color)
+        enemy_king_pos2 = self.pos_conversion(enemy_king_pos)
         if logic.is_square_attacked(king_pos, king_pos2, current_color):
             self.grid = backup_grid
-            return 3  # must move out of check
+            return 2  # must move out of check
 
-        return 0
+        if logic.is_square_attacked(enemy_king_pos, enemy_king_pos2, other_color):#if put other king in check
+            pass
 
-        # if check == "promotion":
-        #     self.promotion(end_pos, color, moves)
-        #     self.remove_piece(pos=start_pos)
-        #     return 0
-        #     # promotion!!!!
-        # elif check > 30:
-        #     self.castle(check)
-        #     return 0
-        #
-        # self.add_piece(type=type, pos=end_pos, color=color, moves=moves)
-        # self.remove_piece(pos=start_pos)
-        # return 0  # legal move
+        return 0  # legal move
 
     def promotion(self, pos, color, moves):
         piece = int(input("Enter promotion piece number: "))

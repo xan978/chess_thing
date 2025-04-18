@@ -37,7 +37,7 @@ def move_check(current_color, start, end):
     is_valid_move = game.move_piece(start_pos=start, end_pos=end, current_color=current_color)
     messages = {
         1: "Illegal move",
-        3: "must move out of check"
+        2: "must move out of check"
     }
     return messages.get(is_valid_move, True)
 
