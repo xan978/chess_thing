@@ -1,5 +1,5 @@
 from board import Board
-# from display import Display
+from display import Display
 import os
 import copy
 
@@ -135,3 +135,7 @@ while mode == 2:
     else:
         print("Bye!")
         break
+
+if mode == 3:
+    display = Display()
+    display.display_loop()
