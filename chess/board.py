@@ -65,6 +65,25 @@ class Board:
                 if self.grid[y][x][1] == 6 and self.grid[y][x][2] == color:
                     return [x+1, 8-y]
 
+    def king_move_check(self, king_pos, king_pos2, color): # checks if the king can move. true means it can move
+        directions = [[-1,-1], [-1,0], [-1,1], [0,1], [1,1], [1,0], [1,-1], [0,-1]]
+        logic = Piece(self.grid)
+        x, y = king_pos
+        for i in range(8):
+            x2 = x + directions[i][0]
+            y2 = y + directions[i][1]
+            if(
+                x2 > 8
+                or x2 < 1
+                or y2 > 8
+                or y2 < 1
+            ):
+                continue # skips out of bound squares
+            end = [x2, y2]
+            end2 = self.pos_conversion(end)
+            if logic.move_king(king_pos, end, king_pos2, end2):
+                return True
+        return False
 
     def is_checkmate(self, king_pos, king_pos2, color): # check if king is in checkmate
         logic = Piece(self.grid)

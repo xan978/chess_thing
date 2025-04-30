@@ -43,7 +43,7 @@ def move_check(current_color, start, end):
 
 
 clear()
-mode = int(input("| start game: 1 | test functions: 2 |\n"))
+mode = int(input("| start game: 1 | test functions: 2 | test display |\n"))
 move_number = 1
 current_color = 1
 error_message = False
