@@ -5,4 +5,4 @@
 * has a graphical interface
 
 ## currently completed
-* most of the chess logic
+* the chess logic

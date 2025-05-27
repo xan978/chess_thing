@@ -65,7 +65,7 @@ class Board:
                 if self.grid[y][x][1] == 6 and self.grid[y][x][2] == color:
                     return [x+1, 8-y]
 
-    def king_move_check(self, king_pos, king_pos2, color): # checks if the king can move. true means it can move
+    def king_move_check(self, king_pos, king_pos2): # checks if the king can move. true means it can move
         directions = [[-1,-1], [-1,0], [-1,1], [0,1], [1,1], [1,0], [1,-1], [0,-1]]
         logic = Piece(self.grid)
         x, y = king_pos
@@ -87,27 +87,65 @@ class Board:
 
     def is_checkmate(self, king_pos, king_pos2, color): # check if king is in checkmate
         logic = Piece(self.grid)
-        enemy_color = self.opposite_color(color)
         if not logic.is_square_attacked(king_pos, king_pos2, color):
-            return False
-        # insert check if king can just move out of the way
+            return False # not checkmate because king is not in check
+        if self.king_move_check(king_pos, king_pos2):
+            return False # not checkmate because king can move out of the way
 
+        # checks all pieces on the board
         for y in range(8):
             for x in range(8):
-                piece_icon, piece_type, piece_color, piece_moves = self.get_piece_data(king_pos)
+                piece_icon, piece_type, piece_color, piece_moves = self.get_piece_data([x+1, 8-y])
                 if piece_color != color or piece_type == 6 or piece_type == 0:
-                    continue
+                    continue # if not same color as king, skip the rest of this loop
+                start = [x+1, 8-y]
+                start2 = self.pos_conversion(start)
+
+                # checks for all possible moves for said piece
                 for y2 in range(8):
                     for x2 in range(8):
-                        pass
+                        end_pos = [x2+1, 8-y2]
+                        # end_pos2 = self.pos_conversion(end_pos)
+                        backup = copy.deepcopy(self.grid)
+                        result = self.move_piece(start, end_pos, color, checks=False)
+                        if result == 0:
+                            self.grid = backup
+                            return False # if theres a legal move, that means king is not in check
+        return True # checkmate, not legal moves were found
 
+    def is_stalemate(self, king_pos, king_pos2, color):
+        logic = Piece(self.grid)
+        if logic.is_square_attacked(king_pos, king_pos2, color):
+            return False # not stalemate because king is in check
+        if self.king_move_check(king_pos, king_pos2):
+            return False # not stalemate because king has legal moves
 
-    def move_piece(self, start_pos, end_pos, current_color):
+        # checks all pieces on the board
+        for y in range(8):
+            for x in range(8):
+                piece_icon, piece_type, piece_color, piece_moves = self.get_piece_data([x + 1, 8 - y])
+                if piece_color != color or piece_type == 6 or piece_type == 0:
+                    continue  # if not same color as king, skip the rest of this loop
+                start = [x + 1, 8 - y]
+
+                # checks for all possible moves for said piece
+                for y2 in range(8):
+                    for x2 in range(8):
+                        end_pos = [x2 + 1, 8 - y2]
+                        backup = copy.deepcopy(self.grid)
+                        result = self.move_piece(start, end_pos, color, checks=False)
+                        if result == 0:
+                            self.grid = backup
+                            return False  # legal move found, king not in stalemate
+        return True  # stalemate, not legal moves were found
+
+    def move_piece(self, start_pos, end_pos, current_color, checks=True):
 
         icon, type, color, moves = self.get_piece_data(start_pos)
         start_pos2 = self.pos_conversion(start_pos)
         end_pos2 = self.pos_conversion(end_pos)
         moves += 1
+        backup_grid = copy.deepcopy(self.grid)
         # print(f"TEST DATA: {self.king_pos(current_color)}")
 
         if (
@@ -139,8 +177,8 @@ class Board:
             self.add_piece(type=type, pos=end_pos, color=color, moves=moves)
             self.remove_piece(pos=start_pos)
 
+        # this checks if your king is in check after making you move. if so, it reverts the board
         other_color = self.opposite_color(current_color)
-        backup_grid = copy.deepcopy(self.grid)
         king_pos = self.king_pos(current_color)
         king_pos2 = self.pos_conversion(king_pos)
         enemy_king_pos = self.king_pos(other_color)
@@ -149,31 +187,37 @@ class Board:
             self.grid = backup_grid
             return 2  # must move out of check
 
-        if logic.is_square_attacked(enemy_king_pos, enemy_king_pos2, other_color):#if put other king in check
-            pass
+        # this is to see if your move wins the game
+        if checks == True: # required so that checkmate and stalemate fuctions dont do an infinite loop
+            if self.is_checkmate(enemy_king_pos, enemy_king_pos2, other_color):
+                return 3
+            if self.is_stalemate(enemy_king_pos, enemy_king_pos2, other_color):
+                return 4
 
         return 0  # legal move
 
     def promotion(self, pos, color, moves):
-        piece = int(input("Enter promotion piece number: "))
+        # piece = int(input("Enter promotion piece number: "))
+        piece = 5
         self.add_piece(type=piece, pos=pos, color=color, moves=moves)
 
     def castle(self, castle_number):
         if castle_number == 31:  # left white
-            self.move_piece_simple(start_pos=[1, 1], end_pos=[4, 1])  # moves rook
-            self.move_piece_simple(start_pos=[5, 1], end_pos=[3, 1])  # moves king
+            self.move_piece_simple(start_pos=[1, 1], end_pos=[4, 1], add_move=True)  # moves rook
+            self.move_piece_simple(start_pos=[5, 1], end_pos=[3, 1], add_move=True)  # moves king
         elif castle_number == 32:  # right white
-            self.move_piece_simple(start_pos=[8, 1], end_pos=[6, 1])  # moves rook
-            self.move_piece_simple(start_pos=[5, 1], end_pos=[7, 1])  # moves king
+            self.move_piece_simple(start_pos=[8, 1], end_pos=[6, 1], add_move=True)  # moves rook
+            self.move_piece_simple(start_pos=[5, 1], end_pos=[7, 1], add_move=True)  # moves king
         elif castle_number == 33: # left black
-            self.move_piece_simple(start_pos=[1, 8], end_pos=[4, 8])  # moves rook
-            self.move_piece_simple(start_pos=[5, 8], end_pos=[3, 8])  # moves king
+            self.move_piece_simple(start_pos=[1, 8], end_pos=[4, 8], add_move=True)  # moves rook
+            self.move_piece_simple(start_pos=[5, 8], end_pos=[3, 8], add_move=True)  # moves king
         elif castle_number == 34: # right black
-            self.move_piece_simple(start_pos=[8, 8], end_pos=[6, 8])  # moves rook
-            self.move_piece_simple(start_pos=[5, 8], end_pos=[7, 8])  # moves king
+            self.move_piece_simple(start_pos=[8, 8], end_pos=[6, 8], add_move=True)  # moves rook
+            self.move_piece_simple(start_pos=[5, 8], end_pos=[7, 8], add_move=True)  # moves king
 
-    def move_piece_simple(self, start_pos, end_pos):  # takes in unconverted numbers
+    def move_piece_simple(self, start_pos, end_pos, add_move=False):  # takes in unconverted numbers
         icon, type, color, moves = self.get_piece_data(start_pos)
+        if add_move: moves +=1
         self.add_piece(type, end_pos, color, moves=moves)
         self.remove_piece(start_pos)
 
@@ -235,10 +279,3 @@ class Board:
             (7, 2): "*"
         }
         return data_sheet.get((type, color), "?")
-
-
-
-
-
-
-

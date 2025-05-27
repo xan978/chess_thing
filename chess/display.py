@@ -1,10 +1,9 @@
 import pygame
 from board import Board
 class Display:
-    def __init__(self):
+    def __init__(self, grid):
+        self.grid = grid
         self.clock = pygame.time.Clock()
-        self.game = Board()
-        self.game.board_setup()
         self.piece_image = {
             1: "insert here"
             }

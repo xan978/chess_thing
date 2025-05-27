@@ -1,3 +1,7 @@
+5/12/25 - 5/15/25  created and finished is_stalemate method. this detectes if a stalemate happens
+5/5/25  - 5/8/25   finished checkmate code. the is_checkmate method will check if the king can move out of the way,
+                   if it cant, then it will check if any of their pieces can block the checkmate, if not, then its checkmate
+4/28/25 - 4/30/25  created code that checks for checkmate
 4/16/25 - 4/17/25  now you must move out of check or move a piece to block the check. also combined
                    move_piece and one other method together for simplicity
 4/15/25  created castle method in board class, and completed all of the code for castling
