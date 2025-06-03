@@ -78,7 +78,7 @@ while mode == 2:
     if error_message == "checkmate":
         print("checkmate: you win!")
         break
-    elif move_check_data == "stalemate":
+    elif error_message == "stalemate":
         game.print_board(current_color)
         print("stalemate: draw!")
         break

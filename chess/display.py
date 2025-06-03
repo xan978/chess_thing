@@ -10,7 +10,7 @@ class Display:
     def chess_screen(self, screen):
         screen.fill((255, 255, 255))
         colors = [(240, 217, 181), (181, 136, 99)]
-        tile_size = 100
+        tile_size = 100 
 
         for row in range(8):
             for col in range(8):
