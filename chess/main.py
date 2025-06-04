@@ -1,4 +1,5 @@
 from board import Board
+from network import Network
 import os, copy, pygame, time
 
 demo1 = [[['r', 2, 2, 0], ['n', 3, 2, 0], ['b', 4, 2, 0], ['q', 5, 2, 0], ['k', 6, 2, 0], ['b', 4, 2, 0], ['n', 3, 2, 0], ['r', 2, 2, 0]], [['p', 1, 2, 0], ['p', 1, 2, 0], ['p', 1, 2, 0], ['p', 1, 2, 0], ['p', 1, 2, 0], ['p', 1, 2, 0], ['p', 1, 2, 0], ['p', 1, 2, 0]], [[' ', 0, 0, 0], [' ', 0, 0, 0], [' ', 0, 0, 0], [' ', 0, 0, 0], [' ', 0, 0, 0], [' ', 0, 0, 0], [' ', 0, 0, 0], [' ', 0, 0, 0]], [[' ', 0, 0, 0], [' ', 0, 0, 0], [' ', 0, 0, 0], [' ', 0, 0, 0], [' ', 0, 0, 0], [' ', 0, 0, 0], [' ', 0, 0, 0], [' ', 0, 0, 0]], [[' ', 0, 0, 0], [' ', 0, 0, 0], ['r', 2, 2, 0], [' ', 0, 0, 0], [' ', 0, 0, 0], [' ', 0, 0, 0], [' ', 0, 0, 0], [' ', 0, 0, 0]], [[' ', 0, 0, 0], [' ', 0, 0, 0], [' ', 0, 0, 0], [' ', 0, 0, 0], [' ', 0, 0, 0], [' ', 0, 0, 0], [' ', 0, 0, 0], [' ', 0, 0, 0]], [['P', 1, 1, 0], ['P', 1, 1, 0], [' ', 0, 0, 0], ['P', 1, 1, 0], ['P', 1, 1, 0], ['P', 1, 1, 0], ['P', 1, 1, 0], ['P', 1, 1, 0]], [['R', 2, 1, 0], [' ', 0, 0, 0], [' ', 0, 0, 0], [' ', 0, 0, 0], ['K', 6, 1, 0], [' ', 0, 0, 0], [' ', 0, 0, 0], ['R', 2, 1, 0]]]
@@ -63,10 +64,12 @@ def move_check(current_color, start, end): # checks the legality of a move and r
 
 
 clear()
-mode = int(input("| test functions: 1 | start game with display: 2 |\n"))
+mode = int(input("| test functions: 1 | start game with display: 2 | start network multiplayer game: 3\n"))
 move_number = 1
-current_color = 1
 error_message = False
+current_color = 1
+
+#########################################################################################################
 
 while mode == 1:
     game.print_board(color=current_color)
@@ -149,92 +152,105 @@ while mode == 1:
         print("Bye!")
         break
 
-if mode == 2:
+#############################################################################################################
 
-    # declaring varibals
-    colors = [(240, 217, 181), (181, 136, 99)] # colors of the two squares
-    tile_size = 100
-    clock = pygame.time.Clock()  # i need 60 fps,
+# declaring varibals
+colors = [(240, 217, 181), (181, 136, 99)] # colors of the two squares
+tile_size = 100
+clock = pygame.time.Clock()  # i need 60 fps,
 
-    def chess_move(screen, start, end):
+def chess_move(screen, start, end):
 
-        global move_number, current_color, error_message, move_check_data
-        current_color = get_current_color(move_number)
+    global move_number, error_message, move_check_data
+    current_color = get_current_color(move_number)
 
-        move_check_data = move_check(current_color, start, end)
-        if move_check_data == True:
-            move_number += 1; game.print_board()
-        elif move_check_data == "checkmate":
-            game.print_board(); print("checkmate")
-            winner_screen(screen, current_color)
-        elif move_check_data == "stalemate":
-            game.print_board(); print("stalemate")
-        else:
-            error_message = move_check_data
+    move_check_data = move_check(current_color, start, end)
+    if move_check_data == True:
+        move_number += 1; game.print_board()
+    elif move_check_data == "checkmate":
+        game.print_board(); print("checkmate")
+        winner_screen(screen, current_color)
+    elif move_check_data == "stalemate":
+        game.print_board(); print("stalemate")
+        winner_screen(screen, current_color, slatemate=True)
+    else:
+        error_message = move_check_data
 
-        if error_message != False: print(f"error: {move_check_data}") # tells you why your previos move was illegal if needed
-        print(f"current color is {current_color}")
+    if error_message != False:
+        print(f"error: {move_check_data}") # tells you why your previos move was illegal if needed
+        error_message = False
+    print(f"current color is {current_color}")
 
 
-    def chess_screen(screen):
-        screen.fill((255, 255, 255))
+def chess_screen(screen):
+    screen.fill((255, 255, 255))
 
-        for row in range(8):
-            for col in range(8):
-                color = colors[(row + col) % 2]
-                pygame.draw.rect(
-                    screen,
-                    color,
-                    pygame.Rect(col * tile_size, row * tile_size, tile_size, tile_size)
-                )
+    for row in range(8):
+        for col in range(8):
+            color = colors[(row + col) % 2]
+            pygame.draw.rect(
+                screen,
+                color,
+                pygame.Rect(col * tile_size, row * tile_size, tile_size, tile_size)
+            )
 
-                grid_x = col + 1; grid_y = 8 - row  # have to add one because of zero indexing
-                piece = game.get_piece_data([grid_x, grid_y])
+            grid_x = col + 1; grid_y = 8 - row  # have to add one because of zero indexing
+            piece = game.get_piece_data([grid_x, grid_y])
 
-                if piece[1] != 0:
-                    image = piece_images.get((piece[0].lower(), piece[2]))
-                    screen.blit(image, (col * tile_size, row * tile_size))
+            if piece[1] != 0:
+                image = piece_images.get((piece[0].lower(), piece[2]))
+                screen.blit(image, (col * tile_size, row * tile_size))
 
-    def winner_screen(screen, color):
-        global move_number, current_color, error_message, move_check_data
+def winner_screen(screen, color, stalemate = False):
+    global move_number, current_color, error_message, move_check_data
 
+    if stalemate == False:
         color_str = "white" if color == 1 else "black"
         message = f"{color_str} wins!"
-        font = pygame.font.SysFont(None, 100)
-        text = font.render(message, True, (0, 0, 0))
-        rect = text.get_rect(center=(400, 400))
-        screen.fill((181, 136, 99))
-        screen.blit(text, rect)
-        pygame.display.flip()
+    else:
+        message = f"stalemate!"
+    font = pygame.font.SysFont(None, 100)
+    text = font.render(message, True, (0, 0, 0))
+    rect = text.get_rect(center=(400, 400))
+    screen.fill((181, 136, 99))
+    screen.blit(text, rect)
+    pygame.display.flip()
 
-        end = True
-        time.sleep(1.5)
-        while end:
-            for event in pygame.event.get():
-                if event.type == pygame.QUIT:
-                    game.board_setup()
-                    move_number = 1
-                    current_color = 1
-                    error_message = False
-                    end = False
+    end = True
+    time.sleep(1.5)
+    while end:
+        for event in pygame.event.get():
+            if event.type == pygame.QUIT:
+                game.board_setup()
+                move_number = 1
+                current_color = 1
+                error_message = False
+                end = False
 
-    def display_loop():
-        # pygame.init()
-        screen = pygame.display.set_mode([800, 800])
-        running = True
-        start_square = []
-        end_square = []
+def display_loop(network = False):
+    global move_number
+    current_color = get_current_color(move_number)
 
-        while running:
-            for event in pygame.event.get():
-                if event.type == pygame.QUIT:
-                    running = False
+    screen = pygame.display.set_mode([800, 800])
+    running = True
+    start_square = []
+    end_square = []
 
-                if event.type == pygame.MOUSEBUTTONDOWN:
-                    mouse_x, mouse_y = pygame.mouse.get_pos()
-                    x = (mouse_x // 100) + 1
-                    y = 8 - (mouse_y // 100)
+    chess_screen(screen)
+    pygame.display.flip()
 
+    while running:
+        current_color = get_current_color(move_number)
+        for event in pygame.event.get():
+            if event.type == pygame.QUIT:
+                running = False
+
+            if event.type == pygame.MOUSEBUTTONDOWN:
+                mouse_x, mouse_y = pygame.mouse.get_pos()
+                x = (mouse_x // 100) + 1
+                y = 8 - (mouse_y // 100)
+
+                if network == False: # if it's a two player game on the same instance
                     if len(start_square) == 0: # if the list is empty
                         start_square.append(x); start_square.append(y)
                         print(f"selected {start_square}")
@@ -247,11 +263,73 @@ if mode == 2:
                         chess_move(screen, start_square, end_square)
                         start_square = []; end_square = []
 
-            chess_screen(screen)
-            pygame.display.flip()
-            clock.tick(40)
+                if network == "host" and current_color == 1:
+                    if len(start_square) == 0: # if the list is empty
+                        start_square.append(x); start_square.append(y)
+                        print(f"selected {start_square}")
+                    elif start_square[0] == x and start_square[1] == y:
+                        start_square = []
+                        print("canceled move") # if the start and end list are the same, then cancel the move
+                    else:
+                        end_square.append(x); end_square.append(y)
+                        print(f"{start_square} to {end_square}")
+                        chess_move(screen, start_square, end_square)
+                        net.send_move(start_square, end_square)
+                        start_square = []; end_square = []
 
-        pygame.quit()
+                elif network == "client" and current_color == 2:
+                    if len(start_square) == 0: # if the list is empty
+                        start_square.append(x); start_square.append(y)
+                        print(f"selected {start_square}")
+                    elif start_square[0] == x and start_square[1] == y:
+                        start_square = []
+                        print("canceled move") # if the start and end list are the same, then cancel the move
+                    else:
+                        end_square.append(x); end_square.append(y)
+                        print(f"{start_square} to {end_square}")
+                        chess_move(screen, start_square, end_square)
+                        net.send_move(start_square, end_square)
+                        start_square = []; end_square = []
 
+        if network == "host" and current_color == 2:
+            move = net.receive_move()
+            start_square = move[0]
+            end_square = move[1]
+            chess_move(screen, start_square, end_square)
+
+        if network == "client" and current_color == 1:
+            move = net.receive_move()
+            start_square = move[0]
+            end_square = move[1]
+            chess_move(screen, start_square, end_square)
+
+        chess_screen(screen)
+        pygame.display.flip()
+        clock.tick(40)
+
+    pygame.quit()
+
+if mode == 2:
     game.print_board()
     display_loop()
+
+if mode == 3:
+    net = Network()
+    net_mode = input("host or client? h/c: ")
+
+    if net_mode == "h":
+        ip = input("input ip address to bind to: ")
+        port = int(input("input port to bind to: "))
+        net.server_host(ip, port)
+
+        pygame.display.set_caption("chess_thing host")
+        display_loop(network="host")
+
+    elif net_mode == "c":
+        ip = input("input ip address to connect to: ")
+        port = int(input("input port: "))
+        net.client_connect(ip, port)
+
+        pygame.display.set_caption("chess_thing client")
+        display_loop(network="client")
+

@@ -1,8 +1,9 @@
 # Multiplayer chess built in python
 ## goals
-* peer to peer networking
-* follows the rules of chess
-* has a graphical interface
+**1.** peer to peer networking
+**2.** follows the rules of chess
+**3.** has a graphical interface
 
 ## currently completed
-* the chess logic
+
+### all goals have been completed

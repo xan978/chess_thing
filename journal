@@ -1,3 +1,5 @@
+6/4/25             finally completed the networking. this inclued making a network class that can connect two computers and
+                   two new methods for sending move data and resieving data. finished the presentation.
 6/3/25             made a dictionary that holds the piece images. the pieces now display on the board. you can move them around
                    and it only lets you make legal moves. plays and looks like chess. added a win screen that says either "white wins!"
                    or "black wins!" and you can replay after clicking the x at the top right of the window.
@@ -7,7 +9,7 @@
 5/26/25 - 5/29/25  linked up movements from the display to the board. the board still doesnt have the pieces displayed, but you now
                    can click on the squares to move the pieces, and the board state is printed to the terminal
 5/19/25 - 5/22/25  deleted display.py files and merged it into main file, trying to seperate the graphics proved to difficult because of the
-                   while loop and seperation of data and methods.
+                   while loop and seperation of data and methods. also started some of the networking
 5/12/25 - 5/15/25  created and finished is_stalemate method. this detectes if a stalemate happens
 5/5/25  - 5/8/25   finished checkmate code. the is_checkmate method will check if the king can move out of the way,
                    if it cant, then it will check if any of their pieces can block the checkmate, if not, then its checkmate
